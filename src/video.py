@@ -1,17 +1,14 @@
-import os
-from googleapiclient.discovery import build
+from src.channel import APIMixin
 
 
-class Video:
+class Video(APIMixin):
     """Получает статистику видео по его id."""
-    api_key: str = os.getenv('YT_API_KEY')
-    youtube = build('youtube', 'v3', developerKey=api_key)
 
     def __init__(self, video_id: str) -> None:
         """Экземпляр инициализируется id видео. Дальше все данные будут подтягиваться по API."""
         self.__video_id = video_id  # id видео
-        video_response = self.youtube.videos().list(part='snippet,statistics,contentDetails,topicDetails',
-                                                    id=video_id).execute()
+        video_response = self.get_service().videos().list(part='snippet,statistics,contentDetails,topicDetails',
+                                                          id=video_id).execute()
         self.video_title: str = video_response['items'][0]['snippet']['title']  # название видео
         self.link = f"https://www.youtube.com/watch?v={video_id}"  # ссылка на видео
         self.view_count: int = video_response['items'][0]['statistics']['viewCount']  # количество просмотров

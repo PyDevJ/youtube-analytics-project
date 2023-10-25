@@ -4,7 +4,19 @@ import os
 from googleapiclient.discovery import build
 
 
-class Channel:
+class APIMixin:
+    """Класс-миксин для предоставления доступа к API."""
+
+    __API_KEY: str = os.getenv('YT_API_KEY')
+
+    @classmethod
+    def get_service(cls) -> build:
+        """Возвращает объект для работы с API youtube."""
+        service = build('youtube', 'v3', developerKey=cls.__API_KEY)
+        return service
+
+
+class Channel(APIMixin):
     """Класс для ютуб-канала"""
     def __init__(self, channel_id: str) -> None:
         """Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API."""
@@ -24,13 +36,6 @@ class Channel:
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
         print(json.dumps(self.channel, indent=2, ensure_ascii=False))
-
-    @classmethod
-    def get_service(cls):
-        """Класс-метод возвращающий объект для работы с YouTube API."""
-        api_key: str = os.getenv('YT_API_KEY')
-        youtube = build('youtube', 'v3', developerKey=api_key)
-        return youtube
 
     def to_json(self, file_json):
         """Сохраняет в файл значения атрибутов экземпляра `Channel`."""

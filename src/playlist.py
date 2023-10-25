@@ -1,9 +1,9 @@
 import datetime
 import isodate
-from src.channel import Channel
+from src.channel import APIMixin
 
 
-class PlayList(Channel):
+class PlayList(APIMixin):
     """Класс для плейлиста из ютуб который инициализируется _id_ плейлиста."""
 
     def __init__(self, id_playlist: str):
@@ -29,7 +29,6 @@ class PlayList(Channel):
                 playlist_title = playlist["snippet"]["title"]
                 break
         return playlist_title
-        # print(playlist_title)
 
     def get_video_playlist(self):
         """Получает все id видеороликов из плейлиста и выводит длительности видеороликов."""
